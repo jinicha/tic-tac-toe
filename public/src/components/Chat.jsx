@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 import Messages from './Messages.jsx';
 
 export default function Chat() {
+  const socket = io()
   const [input, setInput] = useState('');
   const [msgs, setMsg] = useState([]);
 
@@ -9,16 +11,24 @@ export default function Chat() {
     setInput(e.target.value)
   };
 
-  const handleClick = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    socket.emit('message', input);
     setMsg([...msgs, input]);
     setInput('');
   }
 
+  useEffect(() => {
+    socket.on('message', (msg) => {
+      setMsg([...msgs, msg]);
+    })
+  }, [msgs])
+
   return (
     <div>
-      <form onSubmit={handleClick}>
+      <form onSubmit={handleSubmit}>
         <input
+          type='text'
           value={input}
           onChange={handleInput}
         />
