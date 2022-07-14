@@ -15,6 +15,10 @@ app.use(express.json());
 //   console.log(`Server is listening on port ${port}`);
 // })
 
+httpServer.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+})
+
 io.on('connection', (socket) => {
   console.log('a user connected');
 
@@ -22,8 +26,9 @@ io.on('connection', (socket) => {
     console.log('message: ', msg);
     io.emit('message', msg);
   });
-})
 
-httpServer.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+  socket.on('clickSquare', (val, loc) => {
+    console.log('val, loc: ', val, loc);
+    io.emit('clickSquare', val, loc);
+  })
 })
