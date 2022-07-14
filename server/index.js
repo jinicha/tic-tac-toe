@@ -9,11 +9,12 @@ const io = new Server(httpServer);
 const port = 3009;
 
 app.use(express.static(path.join(__dirname, '../public/dist')));
-app.use(express.json());
 
-// const server = app.listen(port, () => {
-//   console.log(`Server is listening on port ${port}`);
-// })
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: '*'
+//   },
+// });
 
 httpServer.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
@@ -31,4 +32,8 @@ io.on('connection', (socket) => {
     console.log('val, loc: ', val, loc);
     io.emit('clickSquare', val, loc);
   })
+
+  socket.on('disconnect', () => {
+    console.log('disconnected', socket.id)
+  });
 })

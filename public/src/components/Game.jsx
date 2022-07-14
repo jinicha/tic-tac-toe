@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
 import Board from './Board.jsx';
 
-export default function Game() {
-  const socket = io();
+export default function Game({ socket }) {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
+  const [hasClicked, setHasClicked] = useState(0);
 
   const calulateWinner = (board) => {
     const lines = [
@@ -34,24 +33,31 @@ export default function Game() {
     if (winner || boardCopy[i]) {
       return;
     } else {
-      boardCopy[i] = xIsNext ? 'X' : 'O';
+      boardCopy[i] = xIsNext ? 'x' : 'o';
       socket.emit('clickSquare', boardCopy[i], i);
     }
+  }
+
+  const restartButton = () => {
+    setBoard(Array(9).fill(null));
+    setXIsNext(true);
   }
 
   useEffect(() => {
     socket.on('clickSquare', (val, loc) => {
       const boardCopy = [...board];
       boardCopy[loc] = val;
+      setHasClicked(hasClicked + 1);
       setBoard(boardCopy);
       setXIsNext(!xIsNext);
     })
-  })
+  }, [board])
 
   return (
     <div>
+      <button onClick={restartButton}>restart</button>
       <Board squares={board} handleClick={handleClick} />
-      <div>{winner ? `Winner: ${winner}` : `Next: ${(xIsNext ? 'X' : 'O')}`}</div>
+      <div>{winner ? `${winner} won!` : (hasClicked === 9 ? 'draw' : `next player: ${(xIsNext ? 'x' : 'o')}`)}</div>
     </div>
   );
 };

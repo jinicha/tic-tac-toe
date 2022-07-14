@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
 import Messages from './Messages.jsx';
 
-export default function Chat() {
-  const socket = io()
+export default function Chat({ socket }) {
   const [input, setInput] = useState('');
   const [msgs, setMsg] = useState([]);
 
@@ -14,14 +12,13 @@ export default function Chat() {
   const handleSubmit = (e) => {
     e.preventDefault();
     socket.emit('message', input);
-    setMsg([...msgs, input]);
     setInput('');
   }
 
   useEffect(() => {
     socket.on('message', (msg) => {
       setMsg([...msgs, msg]);
-    })
+    });
   }, [msgs])
 
   return (
