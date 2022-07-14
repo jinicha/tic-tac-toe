@@ -40,6 +40,7 @@ export default function Game({ socket }) {
 
   const restartButton = () => {
     setBoard(Array(9).fill(null));
+    setHasClicked(0);
     setXIsNext(true);
   }
 
