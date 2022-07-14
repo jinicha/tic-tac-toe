@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import openSocket from 'socket.io-client'
 import Game from './Game.jsx';
 import Chat from './Chat.jsx';
-const socket = openSocket('http://localhost:3009');
+// const socket = openSocket('http://localhost:3009');
+const socket = openSocket('http://52.72.197.119:3009/');
 
 export default function App() {
   return (
