@@ -33,6 +33,10 @@ io.on('connection', (socket) => {
     io.emit('clickSquare', val, loc);
   })
 
+  socket.on('restart', () => {
+    io.emit('restart');
+  })
+
   socket.on('disconnect', () => {
     console.log('disconnected', socket.id)
   });

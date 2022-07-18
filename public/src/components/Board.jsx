@@ -16,6 +16,6 @@ export default function Board({ squares, handleClick }) {
 
 const GameBoard = styled.div`
     display: grid;
-    grid-template-rows:12vh 12vh 12vh;
-    grid-template-columns:12vh 12vh 12vh;
+    grid-template-rows: 20vh 20vh 20vh;
+    grid-template-columns: 20vh 20vh 20vh;
 `;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Board from './Board.jsx';
 
 export default function Game({ socket }) {
@@ -39,9 +40,7 @@ export default function Game({ socket }) {
   }
 
   const restartButton = () => {
-    setBoard(Array(9).fill(null));
-    setHasClicked(0);
-    setXIsNext(true);
+    socket.emit('restart');
   }
 
   useEffect(() => {
@@ -52,13 +51,38 @@ export default function Game({ socket }) {
       setBoard(boardCopy);
       setXIsNext(!xIsNext);
     })
+    socket.on('restart', () => {
+      setBoard(Array(9).fill(null));
+      setHasClicked(0);
+      setXIsNext(true);
+    })
+
   }, [board])
 
   return (
-    <div>
-      <button onClick={restartButton}>restart</button>
+    <GameSection>
+      <Player>
+        {winner ? `${winner} won!` : (hasClicked === 9 ? 'draw' : `next player: ${(xIsNext ? 'x' : 'o')}`)}
+      </Player>
       <Board squares={board} handleClick={handleClick} />
-      <div>{winner ? `${winner} won!` : (hasClicked === 9 ? 'draw' : `next player: ${(xIsNext ? 'x' : 'o')}`)}</div>
-    </div>
+      <Restart onClick={restartButton}>restart</Restart>
+    </GameSection>
   );
 };
+
+const GameSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Restart = styled.button`
+  height: 2rem;
+  width: 4.7rem;
+  font-size: 1rem;
+`;
+
+const Player = styled.div`
+  display: flex;
+  font-size: 1.4rem;
+`;
